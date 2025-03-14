@@ -5,7 +5,7 @@ import RightSidebar from "@/components/RightSidebar";
 import Sidebar from "@/components/Sidebar";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
-
+import { Suspense } from "react";
 
 export default function RootLayout({ children }) {
   return (
@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <div className="flex flex-row justify-between h-[860px] ">
               <Sidebar />
-              {children}
+              <Suspense>{children}</Suspense>
               <RightSidebar />
             </div>
           </div>

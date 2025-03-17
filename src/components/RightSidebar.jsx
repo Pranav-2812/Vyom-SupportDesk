@@ -38,7 +38,7 @@ export default function RightSidebar() {
                     <i className="fa-regular fa-bell r-45 "></i>
                 </span>
             </div>
-            <div className="flex flex-col items-center px-4  notification-bell-shadow rounded-md w-full h-3/4 overflow-y-auto bg-white ">
+            <div className="flex flex-col items-center px-4 gap-4  notification-bell-shadow rounded-md w-full h-3/4 overflow-y-auto hide bg-white ">
                 <h3 className="text-xl font-bold tracking-wide py-4">Scheduled Meetings</h3>
                 {status === "loading" ? <p>Loading...</p> : ""}
                 {status === "failed" ? <p>Error: {error}</p> : ""}
@@ -67,6 +67,7 @@ export default function RightSidebar() {
                     })
 
                 }
+                {items?.data?.length===0? "No Scheduled Meetings" :""}
             </div>
 
             {open ?

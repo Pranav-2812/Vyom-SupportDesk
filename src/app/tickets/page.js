@@ -2,16 +2,23 @@
 import { useState, useEffect, use } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import ScheduleCalendar from "./Calender";
 export default function TicketPage() {
   const [clicked, setClicked] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [user, setUser] = useState("");
+  const [open, setOpen] = useState(false);
+  const [modal2, setModal2] = useState(false);
+  const [showCalender, setShowCalender] = useState(false);
   const searchParams = useSearchParams();
   const ticketId = searchParams.get("id");
   const tickets = useSelector((state) => state.data.items);
-  console.log(tickets);
+  const router = useRouter();
+  // const scheduledMeets = useSelector((state) => state.meets.items);
+  // console.log(scheduledMeets);
   const handleClick = async (mobNo = 8530292951) => {
-    if(!clicked){
+    if (!clicked) {
       const response = await fetch(
         `https://sggsapp.co.in/vyom/user/fetch_user_primary_details.php?mobile_number=${mobNo}`,
         {
@@ -27,11 +34,27 @@ export default function TicketPage() {
         console.log(result.data);
         setUser(result.data);
       }
-    }
-    else{
+    } else {
       setClicked(false);
     }
   };
+  const closeTicket = async()=>{
+    const response = await fetch("https://sggsapp.co.in/vyom/admin/resolve_ticket.php",{
+      method:"POST",
+      headers: { "Content-Type": "application/json" },
+      body:JSON.stringify({
+        "ticket_id":ticketId,
+        "status":"Resolved"
+      })
+    })
+    const result = await response.json();
+    if(result.success){
+      alert("Closed Successdully!");
+    }
+    else{
+      console.log(result.msg)
+    }
+  }
   useEffect(() => {
     document.title = "Tickets - Vyom Assist";
     if (tickets?.data) {
@@ -43,55 +66,42 @@ export default function TicketPage() {
       }
     }
   }, [tickets, ticketId]);
-  
-  const data = {
-    aadhaar: "998322546871",
-    aadhaar_image_link: "",
-    account_number: " ",
-    address: "",
-    assigned_agent_id: null,
-    assigned_department: null,
-    attached_image_link: null,
-    audio_file_link: null,
-    available_timedate: "2025-03-13 14:00:00",
-    category: "Sales",
-    country: "India",
-    created_at: "2025-03-11 13:31:33",
-    credit_score: null,
-    date_of_birth: "0000-00-00",
-    description: "hi",
-    device_id: null,
-    email: "vikramadityakhupse@gmail.com",
-    first_name: " ",
-    gender: "",
-    image_link: "",
-    language_preference: "Hindi",
-    last_name: " ",
-    last_profile_update: null,
-    last_session_start: null,
-    last_ticket_id: null,
-    last_transaction_date: null,
-    marketing_opt_in: "0",
-    mobile_number: "8530292951",
-    notification_frequency: null,
-    notification_preferences: null,
-    preferred_contact_method: null,
-    preferred_loan_type: null,
-    preferred_support_mode: "",
-    priority_level: "",
-    risk_profile: null,
-    status: "Open",
-    sub_category: "Access Rights",
-    ticket_id: "17",
-    total_assets: null,
-    total_transactions_count: "0",
-    updated_at: "2025-03-11 13:31:33",
-    urgency_level: "Medium",
-    user_created_at: "2025-03-07 00:06:41",
-    user_id: "11",
-    user_language: "English",
-    user_updated_at: "2025-03-07 00:06:41",
-    video_file_link: null,
+  const resoveTicket = () => {
+    if (ticket.preferred_support_mode === "Video Call") {
+      setShowCalender(true);
+    }
+    if (ticket.preferred_support_mode === "Text Message") {
+      router.push(`/chats/conversation?id=${ticket.ticket_id}`);
+    }
+  };
+  const renderLinks = (type) => {
+    if (type === "Attachments") {
+      if (ticket.image_link !== null) {
+        window.open(ticket.image_link, "_blank");
+      } else {
+        alert("No files attached");
+      }
+    }
+
+    if (type === "Video") {
+      console.log(ticket.video_file_link);
+      if (ticket.video_file_link !== null) {
+        window.open(ticket.video_file_link, "_blank");
+      }
+    } else {
+      alert("No files attached");
+    }
+    if (type === "Audio") {
+      if (ticket.audio_file_link !== null) {
+        window.open(ticket.audio_file_link, "_blank");
+      }
+    } else {
+      alert("No files attached");
+    }
+  };
+  const closeModal = () => {
+    setOpen(false);
+    setShowCalender(false);
   };
 
   return (
@@ -154,10 +164,12 @@ export default function TicketPage() {
                       </h1>
                       <button
                         type="button"
-                        className={`w-1/3 ${clicked?"bg-red-500":"bg-blue-600"} font-bold py-2 px-1 text-sm rounded-md cursor-pointer text-white tracking-wide`}
+                        className={`w-1/3 ${
+                          clicked ? "bg-red-500" : "bg-blue-600"
+                        } font-bold py-2 px-1 text-sm rounded-md cursor-pointer text-white tracking-wide`}
                         onClick={() => handleClick(ticket?.mobile_number)}
                       >
-                        {clicked?"Close":"Show profile"}
+                        {clicked ? "Close" : "Show profile"}
                       </button>
                     </span>
                     <div className="w-full flex flex-row  items-center justify-between">
@@ -174,43 +186,63 @@ export default function TicketPage() {
                     <span className="w-full">
                       <h1 className="font-bold py-1 flex flex-row">
                         Mobile Number:{" "}
-                        <p className="font-normal">{ticket?.mobile_number}</p>
+                        <p className="font-normal">&ensp;{ticket?.mobile_number}</p>
                       </h1>
                       <h1 className="font-bold py-1 flex flex-row">
-                        Email: <p className="font-normal">{ticket?.email}</p>
+                        Email: <p className="font-normal">&ensp;{ticket?.email}</p>
                       </h1>
                     </span>
                     <hr />
                     <span className="w-full py-4">
                       <h1 className="font-bold py-1 flex flex-row">
-                        Address: <p className="font-normal">{ticket?.address}</p>
+                        Address:{" "}
+                        <p className="font-normal">&ensp;{ticket?.address}</p>
                       </h1>
                       <span className="flex flex-row items-center justify-between font-bold py-1">
                         <h2 className="flex flex-row">
                           District:{" "}
-                          <p className="font-normal">{ticket?.country}</p>
+                          <p className="font-normal">&ensp;{ticket?.country}</p>
                         </h2>
                         <h2 className="flex flex-row">
                           Taluka :{" "}
-                          <p className="font-normal">{ticket?.country}</p>
+                          <p className="font-normal">&ensp;{ticket?.country}</p>
                         </h2>
                       </span>
                       <h1 className="font-bold flex flex-row pb-3">
-                        State : <p className="font-normal">{ticket?.country}</p>
+                        State : <p className="font-normal">&ensp;{ticket?.country}</p>
                       </h1>
                     </span>
                     <hr />
                   </div>
                 </div>
                 <div className="w-full flex flex-row items-center justify-start gap-10 px-4">
-                  <div className="w-2/4 h-[150px] flex flex-col items-center justify-start gap-12 text-center border-2 rounded-xl box-shadow ">
-                    <h1 className="mt-2 font-bold">Attachments</h1>
-                    <i className="fa-solid fa-paperclip scale-md"></i>
-                  </div>
-                  <div className="w-2/4 h-[150px] flex flex-col items-center justify-start gap-12 text-center border-2 rounded-xl box-shadow ">
-                    <h1 className="mt-2 font-bold">Video</h1>
-                    <i className="fa-solid fa-video scale-md "></i>
-                  </div>
+                  <button
+                    className="w-2/4 h-[100px] flex flex-col items-center justify-center gap-4 text-center border-2 cursor-pointer rounded-xl box-shadow "
+                    onClick={() => {
+                      renderLinks("Attachments");
+                    }}
+                  >
+                    <h1 className=" font-bold text-sm">Attachments</h1>
+                    <i className="fa-solid fa-paperclip scale-sm"></i>
+                  </button>
+                  <button
+                    className="w-2/4 h-[100px] flex flex-col items-center justify-center gap-4 text-center border-2 cursor-pointer rounded-xl box-shadow "
+                    onClick={() => {
+                      renderLinks("Video");
+                    }}
+                  >
+                    <h1 className=" font-bold text-sm">Video</h1>
+                    <i className="fa-solid fa-video scale-sm "></i>
+                  </button>
+                  <button
+                    className="w-2/4 h-[100px] flex flex-col items-center justify-center gap-4 text-center border-2 cursor-pointer rounded-xl box-shadow "
+                    onClick={() => {
+                      renderLinks("Audio");
+                    }}
+                  >
+                    <h1 className=" font-bold text-sm">Audio</h1>
+                    <i className="fa-solid fa-play  scale-sm"></i>
+                  </button>
                 </div>
               </div>
               <div className="w-2/4 h-max flex flex-col items-center justify-between">
@@ -250,44 +282,69 @@ export default function TicketPage() {
                     User Query
                   </div>
                 </div>
-                <button className="bg-red-600 rounded-xl px-2 py-3 text-white font-bold w-2/4 notification-bell-shadow cursor-pointer">
+                <button
+                  className="bg-red-600 rounded-xl px-2 py-3 text-white font-bold w-2/4 notification-bell-shadow cursor-pointer"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
                   Resolve Query
+                </button>
+                <button
+                  className="bg-green-600 rounded-xl px-2 py-3 mt-2 text-white font-bold w-2/4 notification-bell-shadow cursor-pointer"
+                  onClick={() => {
+                    setModal2(true);
+                  }}
+                >
+                  Close
                 </button>
               </div>
             </div>
           </div>
           {clicked ? (
             <div className="w-1/3 h-full  flex flex-col  rounded-xl border-2 ">
-              <div className="flex flex-col w-full text-center border-b-2 py-10" >
+              <div className="flex flex-col w-full text-center border-b-2 py-10">
                 <h1 className="font-bold tracking-wide">
                   {user?.first_name} {user?.last_name}{" "}
                   {user?.gender === "Male" ? "(M)" : "(F)"}
                 </h1>
               </div>
-              
+
               <div className="w-full flex flex-col gap-10 items-start px-4 py-4">
-                <h1 className="flex flex-row justify-around gap-6 items-center" >
-                  <p className="font-bold text-lg tracking-wide">Account Number:</p>
+                <h1 className="flex flex-row justify-around gap-6 items-center">
+                  <p className="font-bold text-lg tracking-wide">
+                    Account Number:
+                  </p>
                   <p>{user.account_number}</p>
                 </h1>
                 <h1 className="flex flex-row justify-around gap-6 items-center">
-                  <p className="font-bold text-lg tracking-wide">Mobile Number:</p>
+                  <p className="font-bold text-lg tracking-wide">
+                    Mobile Number:
+                  </p>
                   <p>{user.mobile_number}</p>
                 </h1>
                 <h1 className="flex flex-row justify-around gap-6 items-center">
-                  <p className="font-bold text-lg tracking-wide">Aadhar Number:</p>
+                  <p className="font-bold text-lg tracking-wide">
+                    Aadhar Number:
+                  </p>
                   <p>{user.aadhaar}</p>
                 </h1>
                 <h1 className="flex flex-row justify-around gap-6 items-center">
-                  <p className="font-bold text-lg tracking-wide">Account Type:</p>
+                  <p className="font-bold text-lg tracking-wide">
+                    Account Type:
+                  </p>
                   <p>{user.account_type}</p>
                 </h1>
                 <h1 className="flex flex-row justify-around gap-6 items-center">
-                  <p className="font-bold text-lg tracking-wide">Active Loan:</p>
+                  <p className="font-bold text-lg tracking-wide">
+                    Active Loan:
+                  </p>
                   <p></p>
                 </h1>
                 <h1 className="flex flex-row justify-around gap-6 items-center">
-                  <p className="font-bold text-lg tracking-wide">Bank Balance:</p>
+                  <p className="font-bold text-lg tracking-wide">
+                    Bank Balance:
+                  </p>
                   <p>{user.total_assets}</p>
                 </h1>
               </div>
@@ -297,6 +354,104 @@ export default function TicketPage() {
           )}
         </div>
       </div>
+      {open ? (
+        <div className="fixed flex items-center justify-center top-0 left-0 w-screen h-screen bg- modal-blur z-20">
+          <div className="absolute flex flex-col gap-8 items-center px-20 w-2/4 h-2/4 bg-white rounded-2xl box-shadow ">
+            <span className="w-full  py-4 flex flex-row items-center justify-between">
+              <h1 className="text-2xl tracking-wide font-bold text-blue-400">
+                Resolve Ticket
+              </h1>
+              <button
+                className="bg-red-500 px-4 py-1 text-white font-bold rounded-md notification-bell-shadow cursor-pointer"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </span>
+            {!showCalender ? (
+              <>
+                <div className="flex flex-col gap-2 w-full rounded-lg border-2 border-red-400 py-4 px-4 ">
+                  <span className="flex flex-row items-center justify-start gap-4 text-lg">
+                    <h1 className="font-bold tracking-wide">Ticket ID :</h1>
+                    <h1>{ticket?.ticket_id}</h1>
+                  </span>
+                  <span className="flex flex-row items-center justify-start gap-4 text-lg">
+                    <h1 className="font-bold tracking-wide">Customer Name :</h1>
+                    <h1>
+                      {ticket.first_name} {ticket.last_name}&ensp;{" "}
+                      {ticket.gender === "Male" ? "(M)" : "(F)"}
+                    </h1>
+                  </span>
+                  <span className="flex flex-row items-center justify-start gap-4 text-lg">
+                    <h1 className="font-bold tracking-wide">
+                      Customer Account No :
+                    </h1>
+                    <h1>{ticket.account_number}</h1>
+                  </span>
+
+                  <span className="flex flex-row items-center justify-start gap-34 text-lg">
+                    <span className="flex flex-row items-center gap-4">
+                      <h1 className="font-bold tracking-wide">Category :</h1>
+                      <h1>{ticket.category}</h1>
+                    </span>
+                    <span className="flex flex-row items-center gap-4">
+                      <h1 className="font-bold tracking-wide">Sub Category:</h1>
+                      <h1>{ticket.sub_category}</h1>
+                    </span>
+                  </span>
+                  <span className="flex flex-row items-center justify-start gap-4 text-lg">
+                    <h1 className="font-bold tracking-wide">
+                      Language Preference :
+                    </h1>
+                    <h1>{ticket.language_preference}</h1>
+                  </span>
+                  <span className="flex flex-row items-center justify-start gap-4 text-lg">
+                    <h1 className="font-bold tracking-wide">
+                      Ticket Description :
+                    </h1>
+                    <h1>{ticket.description}</h1>
+                  </span>
+                </div>
+                <button
+                  className="bg-blue-500 text-white font-bold tracking-wide px-4 py-2 rounded-lg cursor-pointer box-shadow"
+                  onClick={resoveTicket}
+                >
+                  {ticket.preferred_support_mode === "Video Call" ? (
+                    "Schedule Video Call"
+                  ) : ticket.preferred_support_mode === "Text Message" ? (
+                    "Message Customer"
+                  ) : (
+                    <span className="flex flex-row items-center gap-4">
+                      <i className="fa-solid fa-phone"></i>
+                      Call {ticket.mobile_number}
+                    </span>
+                  )}
+                </button>
+              </>
+            ) : (
+              <ScheduleCalendar targetDate={ticket.available_timedate} />
+            )}
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      {modal2 ? (
+        <div className="fixed flex items-center justify-center top-0 left-0 w-screen h-screen bg- modal-blur z-20">
+          <div className="absolute flex flex-col gap-8 items-center justify-center px-20 w-1/3 h-1/4 bg-white rounded-2xl box-shadow ">
+            
+            <div className="flex flex-col items-center justify-center gap-6">
+              <h1 className="text-2xl font-bold  tracking-wide">Mark as closed?</h1>
+              <span className="flex flex-row items-center gap-10">
+                <button className="bg-red-500 px-4 py-2 rounded-md box-shadow text-white font-bold cursor-pointer" onClick={()=>{setModal2(false)}}>No</button>
+                <button className="bg-green-500 px-4 py-2 rounded-md box-shadow text-white font-bold cursor-pointer" onClick={closeTicket}>Yes</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

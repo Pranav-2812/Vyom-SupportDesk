@@ -39,7 +39,14 @@ body {
 .scale-md{
   scale:2.3;
 }
+.scale-sm{
+  scale: 1.5;
+}
 .modal-blur{
   backdrop-filter: blur(3);
   background-color: rgba(0, 0, 0, 0.5);
 }
+.hide{
+  scrollbar-width: none;
+}
+

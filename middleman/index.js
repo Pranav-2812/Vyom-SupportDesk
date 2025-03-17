@@ -13,21 +13,33 @@ app.use("/",async(req,res)=>{
     res.send("Vyom Meet Middleman Server");
 });
 
-io.on('connection',(socket)=>{
-    console.log(`new user connected ${socket.id}`);
-    socket.on("join-room", (roomId, userId) => {
-      socket.join(roomId);
-      socket.to(roomId).emit("user-connected", userId);
+io.on('connection', (socket) => {
+  console.log(`new user connected ${socket.id}`);
   
-      socket.on("disconnect", () => {
-        socket.to(roomId).emit("user-disconnected", userId);
-      });
+  socket.on("join-room", (roomId, userId, userName) => {
+    socket.join(roomId);
+    // Store the user's name in the socket object
+    socket.userName = userName;
+    // Emit to all other sockets in the room with the new user's name
+    socket.to(roomId).emit("user-connected", userId, userName);
+  
+    socket.on("disconnect", () => {
+      socket.to(roomId).emit("user-disconnected", userId);
     });
-    socket.on('disconnect',()=>{
-      console.log(`${socket.id} user disconnected`);
-    })
-  })
-
+  });
+  
+  socket.on("sending-signal", ({ userId, signal, peerName }) => {
+    io.to(userId).emit("receiving-signal", { 
+      signal, 
+      userId: socket.id,
+      peerName: peerName || socket.userName
+    });
+  });
+  
+  socket.on('disconnect', () => {
+    console.log(`${socket.id} user disconnected`);
+  });
+});
 server.listen(5000,()=>{
     console.log(`server running on http://127.0.0.1:5000`);
 })

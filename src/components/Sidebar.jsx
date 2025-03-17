@@ -12,16 +12,17 @@ export default function Sidebar() {
     };
 
     const menuItems = [
-        { imgSrc: "fa-solid fa-house", label: "Dashboard", path: "/"||"/tickets" },
+        { imgSrc: "fa-solid fa-house", label: "Dashboard", path: "/" },
         { imgSrc: "fa-solid fa-chart-simple", label: "Analytics", path: "/analytics" },
         { imgSrc: "fa-solid fa-gear", label: "Settings", path: "/settings" },
+        { imgSrc: "fa-solid fa-headset", label: "Chat Support", path: "/chats" }
     ];
 
     return (
         <div className="flex flex-col justify-between w-[300px] h-[830px] right-shadow bg-white mt-3 rounded-md">
             <ul className="flex flex-col justify-around w-full mt-14">
                 {menuItems.map((item, index) => {
-                    const isActive = pathname === item.path || activeItem === index;
+                    const isActive = pathname === (item.path || "/tickets") || activeItem === index ;
                     return (
                         <Link key={index} href={item.path} passHref>
                             <li

@@ -13,6 +13,11 @@ import {
   Legend,
   CartesianGrid,
   ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
   Cell,
 } from "recharts";
 import { Card, CardContent } from "@/components/Card"; // Use Tailwind Card component
@@ -25,7 +30,7 @@ const Charts = ({
   totalTickets,
   highRiskCustomers,
   languageWise,
-  agentData
+  agentData,
 }) => {
   useEffect(() => {
     document.title = "Analytics - Vyom Assist";
@@ -35,45 +40,44 @@ const Charts = ({
   return (
     <div className="w-11/12  flex flex-col gap-6 h-[800px] overflow-y-auto hide">
       <Card>
-      <CardContent>
-        <h2 className="text-xl font-bold mb-4">Tickets Resolved by Agents</h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={agentData}>
-            <XAxis dataKey="name" className="text-xs font-bold" />
-            <YAxis domain={[0, Math.max(...agentData.map(item => item.resolved_tickets_count))]} />
-            <Tooltip />
-            <Bar dataKey="resolved_tickets_count" fill="#8784d8" />
-          </BarChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
-    <Card>
         <CardContent>
-          <h2 className="text-xl font-bold mb-4">Agent Ratings</h2>
+          <h2 className="text-xl font-bold mb-4">Tickets Resolved by Agents</h2>
           <ResponsiveContainer width="100%" height={400}>
-            <PieChart>
-              <Pie
-                data={agentData.map((item) => ({
-                  name: item.name,
-                  value: Number(item.rating),
-                }))}
-                cx="50%"
-                cy="50%"
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-                label={(entry) => entry.name}
-              >
-                {agentData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Legend />
+            <BarChart data={agentData}>
+              <XAxis dataKey="name" className="text-xs font-bold" />
+              <YAxis
+                domain={[
+                  0,
+                  Math.max(
+                    ...agentData.map((item) => item.resolved_tickets_count)
+                  ),
+                ]}
+              />
               <Tooltip />
-            </PieChart>
+              <Bar dataKey="resolved_tickets_count" fill="#8784d8" />
+            </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
+      <div className="p-4 bg-white rounded-xl shadow-md">
+      <h2 className="text-xl font-bold mb-4">Agent Ratings</h2>
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-300 px-4 py-2">Agent Name</th>
+            <th className="border border-gray-300 px-4 py-2">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          {agentData.map((agent, index) => (
+            <tr key={index} className="even:bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2 text-center">{agent.name}</td>
+              <td className="border border-gray-300 px-4 py-2 text-center">{agent.rating}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
       <Card>
         <CardContent>
           <h2 className="text-xl font-bold mb-4">Tickets by Category</h2>
@@ -204,7 +208,7 @@ const Charts = ({
           <h2 className="text-xl font-bold mb-4">
             Total Ticket Count Over Time
           </h2>
-          <ResponsiveContainer width="100%" height={250} >
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart
               data={totalTickets.map((item) => ({
                 ...item,
@@ -214,7 +218,6 @@ const Charts = ({
                   year: "numeric",
                 }),
               }))}
-              
             >
               <XAxis
                 dataKey="date"
@@ -275,7 +278,6 @@ const Charts = ({
           </ResponsiveContainer>
         </CardContent>
       </Card>
-
     </div>
   );
 };

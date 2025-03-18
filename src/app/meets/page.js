@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 
 const Room = () => {
   const searchparams = useSearchParams();
-  const roomID = searchparams.get("id") || "12345";
+  const roomID = searchparams.get("id");
   const meetingRef = useRef(null);
   const zpRef = useRef(null);
   const router = useRouter();
@@ -31,7 +31,7 @@ const Room = () => {
         sharedLinks: [
           {
             name: "Shareable link",
-            url: `${window.location.origin}/meets/${roomID}`,
+            url: `${window.location.origin}/meets?id=${roomID}`,
           },
         ],
         scenario: {
@@ -43,7 +43,7 @@ const Room = () => {
 
     initializeMeeting();
     return ()=>{
-      zpRef.current.destory();
+      zpRef.current.destroy();
       closeTicket()
     }
   }, []);

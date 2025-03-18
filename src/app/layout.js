@@ -7,6 +7,8 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "@/store/store";
 import { Suspense, useState, useEffect } from "react";
 import { loginStart, loginSuccess, loginFailure, logout, checkLoginStatus } from "@/store/slices/Auth";
+import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+import { usePathname } from "next/navigation";
 
 // Create a separate component for the app content to use Redux hooks
 function AppContent({ children }) {
@@ -14,7 +16,7 @@ function AppContent({ children }) {
   const { isLoggedIn, isLoading, error } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const pathname = usePathname();
   // Check for existing login on component mount
   useEffect(() => {
     dispatch(checkLoginStatus());
@@ -66,11 +68,12 @@ function AppContent({ children }) {
 
   return (
     <>
-      {!isLoggedIn ? (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-          <div className="w-full max-w-md p-8 bg-blue-200 rounded-lg shadow-md">
+      {!isLoggedIn && pathname!=="/meets"  ? (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
+          <img src="/logo.png" className="absolute scale-sm  "/>
+          <div className="w-full max-w-md p-8 bg-blue-200 rounded-lg shadow-md modal-blur-2">
             <div className="flex justify-center mb-6">
-              <h1 className="text-3xl font-bold text-blue-700">Vyom Assist Login</h1>
+              <h1 className="text-3xl font-bold text-blue-700">Login</h1>
             </div>
             
             {error && (

@@ -18,7 +18,7 @@ export default function RightSidebar() {
     useEffect(() => {
         dispatch(fetchMeetData());
     }, [dispatch]);
-    const handleClick = (ID) => {
+    const handleClick = (meet_id, ID) => {
         if (!open) {
             setOpen(true);
             const ticket = items.data.find((item) => item.ticket_id === ID);
@@ -28,7 +28,8 @@ export default function RightSidebar() {
     }
     const redirectToMeet = (id)=>{
         setOpen(false)
-        router.push(`/meets/${id}`);
+        console.log(id)
+        router.push(`/meets?id=${id}`);
     }
     return (
         <div className="flex flex-col items-center justify-between w-[300px]">
@@ -61,7 +62,7 @@ export default function RightSidebar() {
                                         <p className="text-blue-400">Video</p>
                                     </span>
                                 </span>
-                                <button className="bg-red-600 px-10 py-2 mt-2 text-white font-bold rounded-lg box-shadow cursor-pointer tracking-wide" onClick={() => handleClick(item.ticket_id)}>Details</button>
+                                <button className="bg-red-600 px-10 py-2 mt-2 text-white font-bold rounded-lg box-shadow cursor-pointer tracking-wide" onClick={() => handleClick(item.meet_id,item.ticket_id)}>Details</button>
                             </div>
                         )
                     })
@@ -89,7 +90,7 @@ export default function RightSidebar() {
                             </span>
                             <span className="flex flex-row items-center justify-start gap-4 text-lg">
                                 <h1 className="font-bold tracking-wide">Customer Name :</h1>
-                                <h1>{ticket.first_name}{" "} {ticket.last_name}&ensp; {ticket.gender==="Male"?"(M)":"(F)"}</h1>
+                                <h1>{ticket?.first_name}{" "} {ticket?.last_name}&ensp; {ticket.gender==="Male"?"(M)":"(F)"}</h1>
                             </span>
                             <span className="flex flex-row items-center justify-start gap-4 text-lg">
                                 <h1 className="font-bold tracking-wide">Customer Account No :</h1>

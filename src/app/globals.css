@@ -45,9 +45,16 @@ body {
 .scale-sm{
   scale: 1.5;
 }
+.scale-xl{
+  scale: 3;;
+}
 .modal-blur{
   backdrop-filter: blur(3);
   background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-blur-2{
+  backdrop-filter: blur(3);
+  background-color: rgba(118, 156, 230, 0.512);
 }
 .hide{
   scrollbar-width: none;

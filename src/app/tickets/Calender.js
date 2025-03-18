@@ -91,7 +91,7 @@ export default function ScheduleCalendar({ targetDate,ticket }) {
     body:JSON.stringify({
       ticket_id:ticket.ticket_id,
       available_timedate:date,
-      connection_way: `https://vyom-support-desk.vercel.app/meets/${meetId}`,
+      connection_way: `https://vyom-support-desk.vercel.app/meets?id=${meetId}`,
       meet_id:meetId,
       assigned_agent_id:localStorage.getItem("agentId")
     })
@@ -115,14 +115,14 @@ export default function ScheduleCalendar({ targetDate,ticket }) {
     })}}</li>
      <li><strong>Duration:</strong> Approximately 30 minutes</li>
      <li><strong>Platform:</strong> Union Bank Video Assist Portal</li>
-     <li><strong>Link:</strong>
+     
    </ul>
  
    <h3 style="color: #003366;">How to Join:</h3>
    <ol>
      <li style="display:flex; flex-direction:column;">Click on the link below at the scheduled time:
       <br/>
-      <p>Link: <a href="https://vyom-support-desk.vercel.app/meets/${meetId}" style="color: #003366;">https://vyom-support-desk.vercel.app/meets/${meetId}</a></p>
+      <p>Link: <a href="https://vyom-support-desk.vercel.app/meets?id=${meetId}" style="color: #003366;">https://vyom-support-desk.vercel.app/meets?id=${meetId}</a></p>
      </li>
      <li>Ensure you have a stable internet connection for smooth communication.</li>
      <li>Keep your service ticket details handy for quick reference.</li>
@@ -165,6 +165,7 @@ export default function ScheduleCalendar({ targetDate,ticket }) {
       catch(error){
         console.log(error)
       }
+    
   }
   else{
     console.log(result.msg);

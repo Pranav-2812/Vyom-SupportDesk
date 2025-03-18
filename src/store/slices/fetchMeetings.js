@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk to fetch data from an API
 export const fetchMeetData = createAsyncThunk("data/fetchMeetData", async () => {
-    const response = await fetch(`https://sggsapp.co.in/vyom/admin/fetch_scheduled_tickets.php`,{
+    const response = await fetch(`https://sggsapp.co.in/vyom/admin/fetch_scheduled_tickets.php?assigned_agent_id=${localStorage.getItem("agentId")}`,{
         method:"GET",
        
     });

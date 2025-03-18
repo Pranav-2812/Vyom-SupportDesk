@@ -15,7 +15,7 @@ export default function Home() {
 
   // Check if items.data is available
   const resolved = items?.data?.filter((item) => item.status === "Resolved") || []; // Default to empty array if undefined
- const openTickets = items?.data?.filter((item)=>item.status !== "Resolved") || [];
+ const openTickets = items?.data?.filter((item)=>item.status !== "Resolved" && item.language_preference===JSON.parse(localStorage.getItem("agent"))?.language_skills) || [];
   console.log(resolved);
 
   const handleSortChange = (option) => {
@@ -92,6 +92,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(fetchData());
+    document.title = "Vyom Assits -Dashboard"
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,17 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async thunk to fetch data from an API
-export const fetchData = createAsyncThunk("data/fetchData", async () => {
-  const response = await fetch(`https://sggsapp.co.in/vyom/admin/fetch_tickets.php?agent_id=${localStorage.getItem("agentId")}`,{
-    method:"GET"
-  });
-  const data = await response.json();
-  console.log(data)
-  return data;
+export const fetchChatListData = createAsyncThunk("data/fetchChatList", async () => {
+    const response = await fetch(`https://sggsapp.co.in/vyom/get_conversations.php?agent_id=${localStorage.getItem("agentId")}`,{
+        method:"GET",
+       
+    });
+    const result = await response.json();
+    console.log(result);
+    return result;
 });
 
 const dataSlice = createSlice({
-  name: "data",
+  name: "chats",
   initialState: {
     items: [],
     status: "idle", // idle | loading | succeeded | failed
@@ -20,14 +21,14 @@ const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchData.pending, (state) => {
+      .addCase(fetchChatListData.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchData.fulfilled, (state, action) => {
+      .addCase(fetchChatListData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.items = action.payload;
       })
-      .addCase(fetchData.rejected, (state, action) => {
+      .addCase(fetchChatListData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

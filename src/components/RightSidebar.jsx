@@ -26,9 +26,9 @@ export default function RightSidebar() {
             setTicket(ticket);
         }
     }
-    const redirectToMeet = ()=>{
+    const redirectToMeet = (id)=>{
         setOpen(false)
-        router.push("/meets");
+        router.push(`/meets/${id}`);
     }
     return (
         <div className="flex flex-col items-center justify-between w-[300px]">
@@ -38,12 +38,12 @@ export default function RightSidebar() {
                     <i className="fa-regular fa-bell r-45 "></i>
                 </span>
             </div>
-            <div className="flex flex-col items-center px-4 gap-4  notification-bell-shadow rounded-md w-full h-3/4 overflow-y-auto hide bg-white ">
+            <div className="flex flex-col items-center px-4 gap-4  notification-bell-shadow rounded-md w-full h-3/4  hide bg-white ">
                 <h3 className="text-xl font-bold tracking-wide py-4">Scheduled Meetings</h3>
                 {status === "loading" ? <p>Loading...</p> : ""}
                 {status === "failed" ? <p>Error: {error}</p> : ""}
 
-
+                <div className="w-full h-full overflow-y-auto hide flex flex-col items-center gap-4">
                 {
                     items.data?.map((item, i) => {
                         return (
@@ -67,6 +67,8 @@ export default function RightSidebar() {
                     })
 
                 }
+                
+                </div>
                 {items?.data?.length===0? "No Scheduled Meetings" :""}
             </div>
 
@@ -83,7 +85,7 @@ export default function RightSidebar() {
                         <div className="flex flex-col gap-2 w-full rounded-lg border-2 border-red-400 py-4 px-4 ">
                             <span className="flex flex-row items-center justify-start gap-4 text-lg">
                                 <h1 className="font-bold tracking-wide">Ticket ID :</h1>
-                                <h1>{ticket.ticket_id}</h1>
+                                <h1>{ticket?.ticket_id}</h1>
                             </span>
                             <span className="flex flex-row items-center justify-start gap-4 text-lg">
                                 <h1 className="font-bold tracking-wide">Customer Name :</h1>
@@ -117,7 +119,7 @@ export default function RightSidebar() {
                             </span>
                         </div>
                         <button className="bg-blue-500 text-white font-bold tracking-wide px-4 py-2 rounded-lg cursor-pointer box-shadow"
-                        onClick={redirectToMeet}>
+                        onClick={()=>redirectToMeet(ticket.meet_id)}>
                             Start Meet
                             <i className="fa-solid fa-video ml-4"></i>
                         </button>

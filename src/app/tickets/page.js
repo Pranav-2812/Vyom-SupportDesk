@@ -50,6 +50,8 @@ export default function TicketPage() {
     const result = await response.json();
     if(result.success){
       alert("Closed Successdully!");
+      setModal2(false)
+      router.push("/");
     }
     else{
       console.log(result.msg)
@@ -356,7 +358,7 @@ export default function TicketPage() {
       </div>
       {open ? (
         <div className="fixed flex items-center justify-center top-0 left-0 w-screen h-screen bg- modal-blur z-20">
-          <div className="absolute flex flex-col gap-8 items-center px-20 w-2/4 h-2/4 bg-white rounded-2xl box-shadow ">
+          <div className="absolute flex flex-col gap-18 items-center justify-center  px-20 w-2/4 height_60 bg-white rounded-2xl box-shadow ">
             <span className="w-full  py-4 flex flex-row items-center justify-between">
               <h1 className="text-2xl tracking-wide font-bold text-blue-400">
                 Resolve Ticket
@@ -429,7 +431,7 @@ export default function TicketPage() {
                 </button>
               </>
             ) : (
-              <ScheduleCalendar targetDate={ticket.available_timedate} />
+              <ScheduleCalendar targetDate={ticket.available_timedate} ticket={ticket} />
             )}
           </div>
         </div>

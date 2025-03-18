@@ -36,6 +36,9 @@ body {
 .width_65{
   width: 65% !important;
 }
+.height_60{
+  height: 60% !important;
+}
 .scale-md{
   scale:2.3;
 }

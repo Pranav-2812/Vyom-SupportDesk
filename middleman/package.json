@@ -4,13 +4,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "author": "Pranav Dhumale",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "browserify-middleware": "^8.1.1",
+    "debug": "^4.4.0",
     "express": "^4.21.2",
+    "loadsh": "^0.0.4",
     "nodemon": "^3.1.9",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0"

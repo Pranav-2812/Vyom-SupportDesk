@@ -13,6 +13,7 @@ const Room = () => {
   const router = useRouter();
   useEffect(() => {
     const initializeMeeting = async () => {
+      if (typeof window === "undefined") return;
       const appID = parseInt(process.env.NEXT_PUBLIC_ZEGO_APP_ID);
       const serverSecret = process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRECT;
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
@@ -44,7 +45,7 @@ const Room = () => {
     initializeMeeting();
     return ()=>{
       zpRef.current.destroy();
-      closeTicket()
+      // closeTicket()
     }
   }, []);
   const closeTicket = async()=>{
@@ -58,7 +59,7 @@ const Room = () => {
     })
     const result = await response.json();
     if(result.success){
-      alert("Closed Successdully!");
+      alert("Closed Successfully!");
       router.push("/");
     }
     else{

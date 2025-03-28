@@ -245,6 +245,11 @@ export default function Home() {
                           Medium
                         </p>
                       )}
+                       {item.urgency_level === "Critical" && (
+                        <p className="bg-red-300 h-full mx-4 py-2 rounded-md text-red-800 text-md font-bold">
+                          High
+                        </p>
+                      )}
                     </td>
                   </tr>
                 ))}

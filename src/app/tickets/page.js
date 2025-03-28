@@ -80,9 +80,7 @@ export default function TicketPage() {
     if (type === "Attachments") {
       if (ticket.image_link !== null) {
         window.open(ticket.image_link, "_blank");
-      } else {
-        alert("No files attached");
-      }
+      } 
     }
 
     if (type === "Video") {
@@ -90,15 +88,11 @@ export default function TicketPage() {
       if (ticket.video_file_link !== null) {
         window.open(ticket.video_file_link, "_blank");
       }
-    } else {
-      alert("No files attached");
-    }
+    } 
     if (type === "Audio") {
       if (ticket.audio_file_link !== null) {
         window.open(ticket.audio_file_link, "_blank");
       }
-    } else {
-      alert("No files attached");
     }
   };
   const closeModal = () => {

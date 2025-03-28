@@ -112,7 +112,7 @@ export default function ScheduleCalendar({ targetDate,ticket }) {
       day: "2-digit",
       month: "long",
       year: "numeric",
-    })}}</li>
+    })}</li>
      <li><strong>Duration:</strong> Approximately 30 minutes</li>
      <li><strong>Platform:</strong> Union Bank Video Assist Portal</li>
      

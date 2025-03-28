@@ -73,7 +73,7 @@ function AppContent({ children }) {
           <img src="/logo.png" className="absolute scale-sm  "/>
           <div className="w-full max-w-md p-8 bg-blue-200 rounded-lg shadow-md modal-blur-2">
             <div className="flex justify-center mb-6">
-              <h1 className="text-3xl font-bold text-blue-700">Login</h1>
+              <h1 className="text-3xl font-bold text-blue-700">Customer Care Login</h1>
             </div>
             
             {error && (

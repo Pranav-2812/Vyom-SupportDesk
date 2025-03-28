@@ -53,7 +53,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 .modal-blur-2{
-  backdrop-filter: blur(3);
+  backdrop-filter: blur(2);
   background-color: rgba(118, 156, 230, 0.512);
 }
 .hide{

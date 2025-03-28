@@ -16,7 +16,7 @@ const ChatPage = ({ chats }) => {
                 return (
                     <div className="w-11/12 bg-blue-200 box-shadow rounded-md flex flex-row h-16 cursor-pointer px-10 items-center justify-start gap-10" onClick={()=>{handleClick(chat.id)}} key={i} >
                         <i className="fa-solid fa-circle-user scale-md"></i>
-                        <h1 className="text-xl font-bold text-amber-50">{chat.id}</h1>
+                        <h1 className="text-xl font-bold text-amber-50">Ticket Id :{chat.id}</h1>
                     </div>
                 )
             })

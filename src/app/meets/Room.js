@@ -3,14 +3,14 @@ import { useEffect, useRef } from "react";
 import { useRouter ,  useSearchParams} from "next/navigation";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { v4 as uuid } from "uuid";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 const Room = () => {
   const searchparams = useSearchParams();
   const roomID = searchparams.get("id");
   const meetingRef = useRef(null);
   const zpRef = useRef(null);
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   useEffect(() => {
     const initializeMeeting = async () => {
       const appID = parseInt(process.env.NEXT_PUBLIC_ZEGO_APP_ID);
@@ -31,7 +31,7 @@ const Room = () => {
         sharedLinks: [
           {
             name: "Shareable link",
-            url: `${pathname}/meets?id=${roomID}`,
+            url: `https://vyom-support-desk.vercel.app/meets?id=${roomID}`,
           },
         ],
         scenario: {
